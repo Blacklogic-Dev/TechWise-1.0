@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechWise – Register & Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-yellow-400 text-green-800 font-sans">
+
+  <!-- Header -->
+  <header class="text-center py-6">
+    <h1 class="text-3xl md:text-4xl font-bold">Doughnut World – Register / Dashboard</h1>
+  </header>
+
+  <!-- Registration Form -->
+  <section class="max-w-3xl mx-auto my-8 p-6 bg-green-100 rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+    <form id="registerForm" class="space-y-4">
+      <div class="flex gap-4">
+        <input type="text" placeholder="Name" required class="w-1/2 p-2 rounded border border-green-400">
+        <input type="text" placeholder="Surname" required class="w-1/2 p-2 rounded border border-green-400">
+      </div>
+      <input type="email" placeholder="Email Address" required class="w-full p-2 rounded border border-green-400">
+      <input type="tel" placeholder="Cellphone Number" required class="w-full p-2 rounded border border-green-400">
+      <select required class="w-full p-2 rounded border border-green-400" id="roleSelect">
+        <option value="">Select Role</option>
+        <option value="Student">Student</option>
+        <option value="Middleman">Middleman</option>
+        <option value="Store Owner">Store Owner</option>
+      </select>
+      <input type="text" placeholder="Initials" required class="w-full p-2 rounded border border-green-400">
+      <button type="submit" class="w-full bg-green-800 text-yellow-400 font-bold py-3 rounded hover:bg-green-700 transition">
+        Submit & Share
+      </button>
+    </form>
+  </section>
+
+  <!-- Middleman Dashboard (Hidden until role = Middleman) -->
+  <section id="dashboard" class="max-w-5xl mx-auto my-12 p-6 bg-green-100 rounded-lg shadow-lg hidden">
+    <h2 class="text-2xl font-bold mb-4 text-center">Middleman Dashboard</h2>
+
+    <!-- User Info -->
+    <div class="mb-6 text-center">
+      <p class="font-semibold">Name: <span id="userName"></span></p>
+      <p class="font-semibold">Role: <span id="userRole"></span></p>
+      <p class="font-semibold">Initials: <span id="userInitials"></span></p>
+    </div>
+
+    <!-- Connected Students / Creators / Stores -->
+    <div class="mb-6">
+      <h3 class="font-bold text-xl mb-2">Connections</h3>
+      <ul class="list-disc list-inside">
+        <li>Student A</li>
+        <li>Creator B</li>
+        <li>Store C</li>
+      </ul>
+    </div>
+
+    <!-- Earnings Graph -->
+    <div class="mb-6">
+      <h3 class="font-bold text-xl mb-2 text-center">Earnings vs Time (R)</h3>
+      <canvas id="earningsChart" class="bg-yellow-300 rounded-lg p-2"></canvas>
+    </div>
+
+    <!-- Pending Commissions -->
+    <div>
+      <h3 class="font-bold text-xl mb-2">Pending Commissions</h3>
+      <ul class="list-disc list-inside">
+        <li>Website Sale: R2,500</li>
+        <li>App Sale: R1,200</li>
+        <li>Advertisement Deal: R1,800</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Bottom Navigation -->
+  <nav class="fixed bottom-0 w-full bg-green-800 text-yellow-400 flex justify-around py-3 shadow-inner">
+    <a href="marketing.html" class="flex flex-col items-center">
+      <span class="text-xl">📊</span>
+      <span class="text-sm">Marketing</span>
+    </a>
+    <a href="tools.html" class="flex flex-col items-center">
+      <span class="text-xl">🛠️</span>
+      <span class="text-sm">Tools</span>
+    </a>
+    <a href="guide.html" class="flex flex-col items-center">
+      <span class="text-xl">📖</span>
+      <span class="text-sm">Guide</span>
+    </a>
+    <a href="register.html" class="flex flex-col items-center">
+      <span class="text-xl">📝</span>
+      <span class="text-sm">Register</span>
+    </a>
+  </nav>
+
+  <!-- JS for Form & Chart -->
+  <script>
+    const form = document.getElementById('registerForm');
+    const dashboard = document.getElementById('dashboard');
+    const userName = document.getElementById('userName');
+    const userRole = document.getElementById('userRole');
+    const userInitials = document.getElementById('userInitials');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = form[0].value;
+      const surname = form[1].value;
+      const role = form[4].value;
+      const initials = form[5].value;
+
+      if(role === "Middleman") {
+        userName.textContent = name + ' ' + surname;
+        userRole.textContent = role;
+        userInitials.textContent = initials;
+        dashboard.classList.remove('hidden');
+
+        // Earnings Chart
+        const ctx = document.getElementById('earningsChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+            datasets: [{
+              label: 'Earnings (R)',
+              data: [1000, 3000, 5000, 7000, 9000, 10000],
+              backgroundColor: 'rgba(34,197,94,0.2)',
+              borderColor: 'rgba(34,197,94,1)',
+              borderWidth: 2,
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      } else {
+        alert("Dashboard only available for Middleman role.");
+      }
+    });
+  </script>
+
+</body>
+</html>
